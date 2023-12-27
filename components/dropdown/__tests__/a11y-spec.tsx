@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Dropdown from '../index';
 import '../style';
-import { test, createContainer, testReact } from '../../util/__tests__/legacy/a11y/validate';
+import { test, createContainer, testReact } from '../../util/__tests__/a11y/validate';
 
 const portalContainerId = 'a11y-portal-id';
 let portalContainer: unknown;
@@ -15,6 +15,8 @@ describe('Dropdown A11y', () => {
                 <div>dropdown</div>
             </Dropdown>
         );
+        // eslint-disable-next-line
+        // @ts-ignore
         return test(portalContainer);
     });
 });
