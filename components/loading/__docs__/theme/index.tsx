@@ -1,3 +1,5 @@
+import * as ReactDOM from 'react-dom';
+import * as React from 'react';
 import '../../../demo-helper/style';
 import { Demo, DemoGroup, DemoHead, initDemo } from '../../../demo-helper';
 import '../../style';
@@ -8,17 +10,17 @@ import Loading from '../../index';
 // import component
 
 const lightDemo = {
-    textAlign: 'center',
+    textAlign: 'center' as const,
     padding: '60px',
-    display: 'block'
+    display: 'block',
 };
 
-ReactDOM.render((
+ReactDOM.render(
     <div className="demo-container">
         <h2>加载 Loading</h2>
 
         <Demo title="Loading">
-            <DemoHead cols={['L', 'M']}/>
+            <DemoHead cols={['L', 'M']} />
             <DemoGroup label="Normal">
                 <Loading>
                     <div style={lightDemo}></div>
@@ -28,7 +30,8 @@ ReactDOM.render((
                 </Loading>
             </DemoGroup>
         </Demo>
-    </div>
-), document.getElementById('container'));
+    </div>,
+    document.getElementById('container')
+);
 
 initDemo('loading');

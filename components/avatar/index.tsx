@@ -1,47 +1,29 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import classNames from 'classnames';
+import { Component } from 'react';
+import * as React from 'react';
+import * as PropTypes from 'prop-types';
+import * as classNames from 'classnames';
 import ConfigProvider from '../config-provider';
 import Icon from '../icon';
 import { obj } from '../util';
+import type { AvatarProps } from './types';
 
 /**
  * Avatar
  */
-class Avatar extends Component {
+class Avatar extends Component<AvatarProps> {
     static propTypes = {
         prefix: PropTypes.string,
         children: PropTypes.any,
         className: PropTypes.string,
-        /**
-         * 头像的大小
-         * @enumdesc 小,中,大
-         */
-        size: PropTypes.oneOfType([PropTypes.oneOf(['small', 'medium', 'large']), PropTypes.number]),
-        /**
-         * 头像的形状
-         * @enumdesc 圆形,方形
-         */
+        size: PropTypes.oneOfType([
+            PropTypes.oneOf(['small', 'medium', 'large']),
+            PropTypes.number,
+        ]),
         shape: PropTypes.oneOf(['circle', 'square']),
-        /**
-         * icon 类头像的图标类型，可设为 Icon 的 `type` 或 `ReactNode`
-         */
         icon: PropTypes.oneOfType([PropTypes.node, PropTypes.string]),
-        /**
-         * 图片类头像的资源地址
-         */
         src: PropTypes.string,
-        /**
-         * 图片加载失败的事件，返回 false 会关闭组件默认的 fallback 行为
-         */
         onError: PropTypes.func,
-        /**
-         * 图像无法显示时的 alt 替代文本
-         */
         alt: PropTypes.string,
-        /**
-         * 图片类头像响应式资源地址
-         */
         srcSet: PropTypes.string,
     };
 
@@ -55,7 +37,7 @@ class Avatar extends Component {
         isImgExist: true,
     };
 
-    componentDidUpdate(prevProps) {
+    componentDidUpdate(prevProps: AvatarProps) {
         if (prevProps.src !== this.props.src) {
             // eslint-disable-next-line react/no-did-update-set-state
             this.setState({ isImgExist: true });
@@ -70,7 +52,7 @@ class Avatar extends Component {
         }
     };
 
-    getIconSize = avatarSize => {
+    getIconSize = (avatarSize: AvatarProps['size']) => {
         return typeof avatarSize === 'number' ? avatarSize / 2 : avatarSize;
     };
 
@@ -104,7 +86,9 @@ class Avatar extends Component {
         const iconSize = this.getIconSize(size);
         if (src) {
             if (isImgExist) {
-                children = <img src={src} srcSet={srcSet} onError={this.handleImgLoadError} alt={alt} />;
+                children = (
+                    <img src={src} srcSet={srcSet} onError={this.handleImgLoadError} alt={alt} />
+                );
             } else {
                 children = <Icon type={'picture'} size={iconSize} />;
             }
@@ -122,5 +106,7 @@ class Avatar extends Component {
         );
     }
 }
+
+export { AvatarProps };
 
 export default ConfigProvider.config(Avatar);
