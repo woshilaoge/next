@@ -1,4 +1,3 @@
-/* eslint-disable tsdoc/syntax */
 import * as React from 'react';
 import { CommonProps } from '../util';
 /**
@@ -27,7 +26,7 @@ export interface DropdownProps extends React.HTMLAttributes<HTMLElement>, Common
      * 弹层定位的参照元素
      * @skip
      */
-    target?: unknown;
+    target?: React.ReactNode;
 
     /**
      * 弹层相对于触发元素的定位, 详见 Overlay 的定位部分
@@ -38,10 +37,10 @@ export interface DropdownProps extends React.HTMLAttributes<HTMLElement>, Common
 
     /**
      * 弹层相对于触发元素定位的微调
-     * @en Extra adjustment for trigger element. e.g. [hoz, ver] means move to right ${hoz}px (to left in RTL mode), to bottom ${ver}px
+     * @en Extra adjustment for trigger element. e.g. [hoz, ver] means move to right $\{hoz\}px (to left in RTL mode), to bottom $\{ver\}px
      * @defaultValue [0, 0]
      */
-    offset?: Array<unknown>;
+    offset?: Array<number>;
 
     /**
      * 渲染组件的容器，如果是函数需要返回 ref，如果是字符串则是该 DOM 的 id，也可以直接传入 DOM 节点
@@ -173,9 +172,9 @@ export interface DropdownProps extends React.HTMLAttributes<HTMLElement>, Common
     wrapperStyle?: React.CSSProperties;
 
     /**
-     * 配置动画的播放方式，支持 {in: 'enter-class', out: 'leave-class' } 的对象参数，如果设置为 false，则不播放动画
-     * @en Animation play mode, support object value: { in: 'enter-class', out: 'leave-class' }, there is no animation if set false
-     * @defaultValue { in: 'expandInDown', out: 'expandOutUp' }
+     * 配置动画的播放方式，支持 \{in: 'enter-class', out: 'leave-class' \} 的对象参数，如果设置为 false，则不播放动画
+     * @en Animation play mode, support object value: \{ in: 'enter-class', out: 'leave-class' \}, there is no animation if set false
+     * @defaultValue \{ in: 'expandInDown', out: 'expandOutUp' \}
      */
     animation?: object | boolean;
 
@@ -190,13 +189,13 @@ export interface DropdownProps extends React.HTMLAttributes<HTMLElement>, Common
      * @en Operation type of trigger overlay toggle visible, eg 'hover', 'click'
      * @defaultValue 'hover'
      */
-    triggerType?: string | Array<unknown>;
+    triggerType?: string | Array<string>;
 
     /**
      * 当 triggerType 为 click 时才生效，可自定义触发弹层显示的键盘码
      * @skip
      */
-    triggerClickKeycode?: number | Array<unknown>;
+    triggerClickKeycode?: number | Array<number>;
 
     /**
      * 弹层默认是否显示
