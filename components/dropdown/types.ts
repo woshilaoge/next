@@ -244,5 +244,3 @@ export interface DropdownProps extends React.HTMLAttributes<HTMLElement>, Common
      */
     followTrigger?: boolean;
 }
-
-export default class Dropdown extends React.Component<DropdownProps, unknown> {}
