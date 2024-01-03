@@ -1,19 +1,38 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import * as React from 'react';
+import { Component } from 'react';
+import * as PropTypes from 'prop-types';
 import { polyfill } from 'react-lifecycles-compat';
-import classNames from 'classnames';
+import * as classNames from 'classnames';
 import nextLocale from '../locale/zh-cn';
 import Icon from '../icon';
 import Animate from '../animate';
 import ConfigProvider from '../config-provider';
 import { obj } from '../util';
+import { MessageProps } from './types';
 
 const noop = () => {};
+
+interface MessageStates {
+    visible: boolean;
+}
 
 /**
  * Message
  */
-class Message extends Component {
+class Message extends Component<MessageProps, MessageStates> {
+    static show: unknown;
+    static success: unknown;
+    static warning: unknown;
+    static error: unknown;
+    static notice: unknown;
+    static help: unknown;
+    static loading: unknown;
+    static hide: unknown;
+    static withContext: unknown;
+    static close: unknown;
+    static open: unknown;
+    static destory: unknown;
+
     static propTypes = {
         prefix: PropTypes.string,
         pure: PropTypes.bool,
@@ -86,10 +105,12 @@ class Message extends Component {
     };
 
     state = {
-        visible: typeof this.props.visible === 'undefined' ? this.props.defaultVisible : this.props.visible,
+        visible: !!(typeof this.props.visible === 'undefined'
+            ? this.props.defaultVisible
+            : this.props.visible),
     };
 
-    static getDerivedStateFromProps(props) {
+    static getDerivedStateFromProps(props: { visible: boolean }) {
         if ('visible' in props) {
             return {
                 visible: props.visible,
@@ -105,7 +126,7 @@ class Message extends Component {
                 visible: false,
             });
         }
-        this.props.onClose(false);
+        this.props.onClose?.();
     };
 
     render() {
@@ -144,24 +165,33 @@ class Message extends Component {
             [`${prefix}${size}`]: size,
             [`${prefix}title-content`]: !!title,
             [`${prefix}only-content`]: !title && !!children,
-            [className]: className,
+            [className as string]: className,
         });
 
         const newChildren = visible ? (
-            <div role="alert" style={style} {...others} className={classes} dir={rtl ? 'rtl' : undefined}>
+            <div
+                role="alert"
+                style={style}
+                {...others}
+                className={classes}
+                dir={rtl ? 'rtl' : undefined}
+            >
                 {closeable ? (
                     <a
                         role="button"
-                        aria-label={locale.closeAriaLabel}
+                        aria-label={locale?.closeAriaLabel as string}
                         className={`${messagePrefix}-close`}
                         onClick={this.onClose}
                     >
                         <Icon type="close" />
                     </a>
                 ) : null}
+                string
                 {icon !== false ? (
                     <Icon
-                        className={`${messagePrefix}-symbol ${!icon && `${messagePrefix}-symbol-icon`}`}
+                        className={`${messagePrefix}-symbol ${
+                            !icon && `${messagePrefix}-symbol-icon`
+                        }`}
                         type={icon}
                     />
                 ) : null}

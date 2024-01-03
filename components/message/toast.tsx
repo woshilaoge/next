@@ -1,17 +1,19 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import PropTypes from 'prop-types';
+import * as React from 'react';
+import * as ReactDOM from 'react-dom';
+import * as PropTypes from 'prop-types';
 import Overlay from '../overlay';
 import ConfigProvider from '../config-provider';
 import { guid } from '../util';
 import Message from './message';
+import { MessageQuickProps } from './types';
+import { ConfiguredComponent, ComponentCommonProps } from '../config-provider/types';
 
 const { config } = ConfigProvider;
 
-let instance;
-const timeouts = {};
+let instance: { destroy: unknown; component?: undefined } | null;
+const timeouts: { [key: string]: unknown } = {};
 
-class Mask extends React.Component {
+class Mask extends React.Component<MessageQuickProps> {
     static contextTypes = {
         prefix: PropTypes.string,
     };
@@ -53,9 +55,9 @@ class Mask extends React.Component {
     componentWillUnmount() {
         const { timeoutId } = this.props;
 
-        if (timeoutId in timeouts) {
+        if (timeoutId && timeoutId in timeouts) {
             const timeout = timeouts[timeoutId];
-            clearTimeout(timeout);
+            clearTimeout(timeout as number);
             delete timeouts[timeoutId];
         }
     }
@@ -121,14 +123,20 @@ class Mask extends React.Component {
 
 const NewMask = config(Mask);
 
-const create = props => {
+const create = (props: {
+    [x: string]: unknown;
+    duration: number;
+    afterClose: () => void;
+    contextConfig: object;
+}) => {
     /* eslint-disable no-unused-vars */
     const { duration, afterClose, contextConfig, ...others } = props;
     /* eslint-enable no-unused-vars */
 
     const div = document.createElement('div');
     document.body.appendChild(div);
-    const closeChain = function() {
+    const closeChain = function () {
+        // eslint-disable-next-line react/no-deprecated
         ReactDOM.unmountComponentAtNode(div);
         document.body.removeChild(div);
         afterClose && afterClose();
@@ -137,8 +145,8 @@ const create = props => {
     let newContext = contextConfig;
     if (!newContext) newContext = ConfigProvider.getContext();
 
-    let mask,
-        myRef,
+    let mask: { getInstance: () => { handleClose: (b: boolean) => void } },
+        myRef: ConfiguredComponent<MessageQuickProps & ComponentCommonProps, Mask> | null,
         destroyed = false;
     const destroy = () => {
         const inc = mask && mask.getInstance();
@@ -146,6 +154,7 @@ const create = props => {
         destroyed = true;
     };
 
+    // eslint-disable-next-line react/no-deprecated
     ReactDOM.render(
         <ConfigProvider {...newContext}>
             <NewMask
@@ -157,8 +166,8 @@ const create = props => {
             />
         </ConfigProvider>,
         div,
-        function() {
-            mask = myRef;
+        function () {
+            mask = myRef as unknown as { getInstance: () => { handleClose: (b: boolean) => void } };
             if (mask && destroyed) {
                 destroy();
             }
@@ -171,11 +180,12 @@ const create = props => {
     };
 };
 
-function handleConfig(config, type) {
-    let newConfig = {};
+function handleConfig(config: object | null | undefined, type: unknown) {
+    let newConfig: { [x: string]: unknown } = {};
 
     if (typeof config === 'string' || React.isValidElement(config)) {
         newConfig.title = config;
+        // eslint-disable-next-line @typescript-eslint/no-use-before-define
     } else if (isObject(config)) {
         newConfig = { ...config };
     }
@@ -189,11 +199,12 @@ function handleConfig(config, type) {
     return newConfig;
 }
 
-function isObject(obj) {
+function isObject(obj: object | null | undefined) {
     return {}.toString.call(obj) === '[object Object]';
 }
 
-function open(config, type) {
+function open(config: object | null | undefined, type: unknown) {
+    // eslint-disable-next-line @typescript-eslint/no-use-before-define
     close();
     config = handleConfig(config, type);
     const timeoutId = guid();

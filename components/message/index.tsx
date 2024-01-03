@@ -1,27 +1,35 @@
 import ConfigProvider from '../config-provider';
-import Message from './message';
+import MessageComponent from './message';
 import toast, { withContext } from './toast';
 import message from './toast2';
 
-Message.show = toast.show;
-Message.success = toast.success;
-Message.warning = toast.warning;
-Message.error = toast.error;
-Message.notice = toast.notice;
-Message.help = toast.help;
-Message.loading = toast.loading;
-Message.hide = toast.hide;
-Message.withContext = withContext;
+import type { MessageProps, MessageQuickProps, Message } from './types';
 
-const MessageProvider = ConfigProvider.config(Message, {
+export type { MessageProps, MessageQuickProps, Message };
+
+MessageComponent.show = toast.show;
+MessageComponent.success = toast.success;
+MessageComponent.warning = toast.warning;
+MessageComponent.error = toast.error;
+MessageComponent.notice = toast.notice;
+MessageComponent.help = toast.help;
+MessageComponent.loading = toast.loading;
+MessageComponent.hide = toast.hide;
+MessageComponent.withContext = withContext;
+
+const MessageProvider = ConfigProvider.config(MessageComponent, {
     componentName: 'Message',
 });
 
 export default MessageProvider;
 
+interface IMessageProvider {
+    config: unknown;
+}
+
 let openV2 = false;
 // 调用 config 开启 v2 版本的 message
-MessageProvider.config = config => {
+(MessageProvider as unknown as IMessageProvider).config = (config: unknown) => {
     message.config(config);
 
     if (!openV2) {

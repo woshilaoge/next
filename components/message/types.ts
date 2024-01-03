@@ -1,13 +1,14 @@
-/// <reference types="react" />
-
 import * as React from 'react';
 import { CommonProps } from '../util';
 import { OverlayProps } from '../overlay';
-interface HTMLAttributesWeak extends React.HTMLAttributes<HTMLElement> {
-    title?: any;
+
+interface HTMLAttributesWeak<T> extends React.HTMLAttributes<T> {
+    // ... 其他属性 ...
+    title?: string;
+    content?: string;
 }
 
-export interface MessageProps extends HTMLAttributesWeak, CommonProps {
+export interface MessageProps extends Omit<HTMLAttributesWeak<unknown>, 'title'>, CommonProps {
     /**
      * 反馈类型
      */
@@ -69,7 +70,9 @@ export interface MessageProps extends HTMLAttributesWeak, CommonProps {
     animation?: boolean;
 }
 
-export interface MessageQuickProps extends Omit<HTMLAttributesWeak, 'content'>, CommonProps {
+export interface MessageQuickProps
+    extends Omit<HTMLAttributesWeak<unknown>, 'title' | 'content'>,
+        CommonProps {
     /**
      * 反馈类型
      */
@@ -96,7 +99,7 @@ export interface MessageQuickProps extends Omit<HTMLAttributesWeak, 'content'>, 
     /**
      * 弹层相对于参照元素定位的微调
      */
-    offset?: Array<any>;
+    offset?: Array<number>;
     /**
      * 是否显示遮罩
      */
@@ -135,14 +138,14 @@ export interface MessageQuickProps extends Omit<HTMLAttributesWeak, 'content'>, 
 
 type OpenProps = string | React.ReactElement | MessageQuickProps;
 
-export default class Message extends React.Component<MessageProps, any> {
-    static show(props: OpenProps): void;
-    static hide(): void;
-    static success(props: OpenProps): void;
-    static warning(props: OpenProps): void;
-    static error(props: OpenProps): void;
-    static help(props: OpenProps): void;
-    static loading(props: OpenProps): void;
-    static notice(props: OpenProps): void;
-    static config(props: OpenProps): void;
+export class Message extends React.Component<MessageProps, unknown> {
+    static show: (props: OpenProps) => void;
+    static hide: () => void;
+    static success: (props: OpenProps) => void;
+    static warning: (props: OpenProps) => void;
+    static error: (props: OpenProps) => void;
+    static help: (props: OpenProps) => void;
+    static loading: (props: OpenProps) => void;
+    static notice: (props: OpenProps) => void;
+    static config: (props: OpenProps) => void;
 }

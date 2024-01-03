@@ -77,4 +77,6 @@ export interface AnimateProps extends React.HTMLAttributes<HTMLElement>, CommonP
     afterLeave?: TransitionProps['onExited'];
 }
 
-export default class Animate extends React.Component<AnimateProps, any> {}
+export default class Animate extends React.Component<AnimateProps, any> {
+    static Expand: any;
+}
